@@ -3,9 +3,20 @@ import { sendText } from "../lib/telegram.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") return json(res, 405, { ok: false, error: "Method not allowed" });
-  if (!safeEqual(bearer(req), process.env.ADMIN_TEST_SECRET)) {
-    return json(res, 401, { ok: false, error: "Unauthorized" });
-  }
+const receivedSecret = bearer(req);
+const configuredSecret = process.env.ADMIN_TEST_SECRET || "";
+
+if (!safeEqual(receivedSecret, configuredSecret)) {
+  return json(res, 401, {
+    ok: false,
+    error: "Unauthorized",
+    diagnostic: {
+      envConfigured: Boolean(configuredSecret),
+      envLength: configuredSecret.length,
+      receivedLength: receivedSecret.length
+    }
+  });
+}
   try {
     const message = "✅ Tes koneksi BOT PERSURATAN LAPAS NGASEMAN berhasil.";
     const group = process.env.TELEGRAM_GROUP_CHAT_ID;
