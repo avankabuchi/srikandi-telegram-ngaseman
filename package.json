@@ -1,0 +1,18 @@
+{
+  "name": "srikandi-telegram-ngaseman",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod",
+    "telegram:setup": "node scripts/setup-telegram.js"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.0.2"
+  },
+  "devDependencies": {
+    "vercel": "^41.0.0"
+  }
+}
