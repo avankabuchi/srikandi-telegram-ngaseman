@@ -22,7 +22,18 @@ if (!safeEqual(receivedSecret, configuredSecret)) {
     const group = process.env.TELEGRAM_GROUP_CHAT_ID;
     const leaders = (process.env.TELEGRAM_LEADER_CHAT_IDS || "").split(",").map(x => x.trim()).filter(Boolean);
     const targets = [...(group ? [group] : []), ...leaders];
-    if (!targets.length) return json(res, 400, { ok: false, error: "Chat ID tujuan belum diatur" });
+   if (!targets.length) {
+  return json(res, 400, {
+    ok: false,
+    error: "Chat ID tujuan belum diatur",
+    diagnostic: {
+      groupConfigured: Boolean(group),
+      groupLength: group ? group.length : 0,
+      leadersConfigured: leaders.length > 0,
+      vercelEnvironment: process.env.VERCEL_ENV || "unknown"
+    }
+  });
+}
     const results = [];
     for (const id of targets) {
       try { await sendText(id, message); results.push({ chatId: id, ok: true }); }
